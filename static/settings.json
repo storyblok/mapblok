@@ -1,0 +1,26 @@
+{
+  "translations": {
+    "de": {
+      "locations": "Händler",
+      "search_placeholder": "Nach Addresse suchen",
+      "search": "Suchen",
+      "filter_by": "Filter nach",
+      "interior_designer": "Raumausstatter",
+      "speciality_shop_for_bath": "Badfachgeschäft",
+      "lifestyle_store": "Lifestylegeschäft",
+      "speciality_shop_for_textiles": "Textilfachgeschäft",
+      "furniture_store": "Einrichtungsgeschäft"
+    },
+    "en": {
+      "locations": "Retailers",
+      "search_placeholder": "Search for address",
+      "search": "Search",
+      "filter_by": "Filter by",
+      "interior_designer": "Interior designer",
+      "speciality_shop_for_bath": "Speciality Shop for Bath",
+      "lifestyle_store": "Lifestyle Store",
+      "speciality_shop_for_textiles": "Speciality Shop for Textiles",
+      "furniture_store": "Furniture Store"
+    }
+  }
+}
