@@ -2,9 +2,12 @@
   <div class="locations" :class="{'locations--closed': closed}">
     <button v-on:click="closed = !closed" class="locations__close"></button>
     <div class="locations__panel">
-      <h1>{{ 'locations'|t }} ({{ locations.length }})</h1>
-      <div v-for="location in locations">
-        <location :location="location"></location>
+      <h1 v-if="loading">Loading...</h1>
+      <div v-else>
+        <h1>{{ 'locations'|t }} ({{ locations.length }})</h1>
+        <div v-for="location in locations">
+          <location :location="location"></location>
+        </div>
       </div>
     </div>
   </div>
@@ -12,15 +15,23 @@
 
 <script>
 import Location from './Location.vue'
+import EventBus from '../libs/EventBus'
 
 export default {
   data () {
     return {
-      closed: false
+      closed: false,
+      loading: true
     }
   },
 
   props: ['locations'],
+
+  created () {
+    EventBus.$on('app:markers-loaded', () => {
+      this.loading = false
+    })
+  },
 
   components: {
     Location

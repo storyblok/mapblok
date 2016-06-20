@@ -27,10 +27,7 @@ export default {
   props: ['locations'],
 
   ready () {
-    this.initMap()
-  },
-
-  created () {
+    EventBus.$on('app:settings-loaded', this.initMap.bind(this))
     EventBus.$on('search-address', this.searchAddress)
     EventBus.$on('show-location', this.showLocation)
   },
@@ -38,14 +35,6 @@ export default {
   events: {
     'search-address' () {
       console.log('search')
-    }
-  },
-
-  watch: {
-    'locations' () {
-      if (this.locations.length > 0) {
-        this.initMarkers()
-      }
     }
   },
 
@@ -87,11 +76,17 @@ export default {
     },
 
     initMap () {
+      this.$watch('locations', () => {
+        if (this.locations.length > 0) {
+          this.initMarkers()
+        }
+      })
+
       // init Google Maps itself
       this.map = new google.maps.Map(this.$el.getElementsByClassName('map')[0], {
         center: this.center,
         scrollwheel: false,
-        styles: this.$root.config.styles,
+        styles: this.$root.config.style,
         zoom: 9,
         mapTypeControl: true,
         mapTypeControlOptions: {
@@ -102,8 +97,8 @@ export default {
 
       // set to current Location according to IP
       this.initCurrentLocation()
-
       this.initInfoBox()
+      this.initMarkers()
     },
 
     initCurrentLocation () {
