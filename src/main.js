@@ -16,7 +16,8 @@ Vue.filter('displayIfTrue', function (check, str) {
 new Vue({
   data () {
     return {
-      translations: {}
+      translations: {},
+      config: {}
     }
   },
   el: 'body',

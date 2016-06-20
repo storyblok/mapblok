@@ -4,6 +4,10 @@
     {{ location.address }}<br>
     {{ location.zip }}, {{ location.city }}<br>
     {{ location.country }}
+    <div class="infobox__contact">
+      <div v-if="location.phone_number">{{ location.phone_number }}</div>
+      <div v-if="location.website"><a :href="location.website">{{ location.website }}</a></div>
+    </div>
   </div>
 </template>
 
@@ -26,6 +30,10 @@ export default {
   -moz-box-shadow:    0px 0px 15px 0px rgba(0, 0, 0, 0.3);
   box-shadow:         0px 0px 15px 0px rgba(0, 0, 0, 0.3);
   line-height: 1.4;
+}
+
+.infobox__contact {
+  margin-top: 10px;
 }
 
 .infobox__picture {

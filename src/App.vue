@@ -12,7 +12,7 @@
 import Locations from './components/Locations.vue'
 import Filters from './components/Filters.vue'
 import Maps from './components/Map.vue'
-import Ajax from 'fajax'
+import Ajax from '@fdaciuk/ajax'
 import Util from './libs/Util'
 
 export default {
@@ -40,19 +40,15 @@ export default {
   },
 
   ready () {
-    Ajax.get(this.settings.markers).then((xhr) => {
-      this.locations = Util.map(xhr.body)
+    Ajax().get(this.settings.markers).then((res) => {
+      this.locations = Util.map(res)
       this.runFilter()
     })
 
-    Ajax.get(this.settings.filters).then((xhr) => {
-      this.filters = xhr.body
-    })
-
-    Ajax.get(this.settings.settings).then((xhr) => {
-      let settings = xhr.body
-
-      this.$root.translations = settings.translations[this.settings.language]
+    Ajax().get(this.settings.settings).then((res) => {
+      this.$root.config = res
+      this.$root.translations = res.translations[this.settings.language]
+      this.filters = res.filters
     })
   },
 

@@ -15,6 +15,7 @@
       {{{ location.speciality_shop_for_bath|displayIfTrue 'speciality_shop_for_bath' }}}
       {{{ location.lifestyle_store|displayIfTrue 'lifestyle_store' }}}
       {{{ location.speciality_shop_for_textiles|displayIfTrue 'speciality_shop_for_textiles' }}}
+      {{{ location.furniture_store|displayIfTrue 'furniture_store' }}}
     </div>
   </div>
 </template>

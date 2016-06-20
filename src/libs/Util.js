@@ -20,6 +20,7 @@ export default {
         'speciality_shop_for_bath': c['if:speciality_shop_for_bath'],
         'lifestyle_store': c['if:lifestyle_store'],
         'speciality_shop_for_textiles': c['if:speciality_shop_for_textiles'],
+        'furniture_store': c['if:furniture_store'],
         'latitude': c['text:latitude'],
         'longitude': c['text:longitude']
       })

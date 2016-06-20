@@ -9,9 +9,8 @@
 
 <script>
 import EventBus from '../libs/EventBus'
-import SnazzyMapsStyle from '../models/map/SnazzyMaps'
 import google from '../shims/Google'
-import Ajax from 'fajax'
+import Ajax from '@fdaciuk/ajax'
 import Config from '../Config'
 import InfoWindow from './InfoWindow.vue'
 import InfoBox from '../libs/InfoBox'
@@ -67,7 +66,7 @@ export default {
     },
 
     searchAddress (term) {
-      Ajax.get('//maps.googleapis.com/maps/api/geocode/json?address=' + term + '&sensor=false').then(function (xhr) {
+      Ajax().get('//maps.googleapis.com/maps/api/geocode/json?address=' + term + '&sensor=false').then(function (xhr) {
         let res = xhr.body
 
         if (xhr.status === 200 && res.results.length > 0) {
@@ -92,8 +91,8 @@ export default {
       this.map = new google.maps.Map(this.$el.getElementsByClassName('map')[0], {
         center: this.center,
         scrollwheel: false,
-        styles: SnazzyMapsStyle,
-        zoom: 5,
+        styles: this.$root.config.styles,
+        zoom: 9,
         mapTypeControl: true,
         mapTypeControlOptions: {
           style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
@@ -108,8 +107,8 @@ export default {
     },
 
     initCurrentLocation () {
-      Ajax.get('//freegeoip.net/json/').then(function (xhr) {
-        this.currentLocation = xhr.body
+      Ajax().get('//freegeoip.net/json/').then(function (res) {
+        this.currentLocation = res
         this.map.setCenter(new google.maps.LatLng(this.currentLocation.latitude, this.currentLocation.longitude))
       }.bind(this))
     },
