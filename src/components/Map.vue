@@ -55,7 +55,7 @@ export default {
     },
 
     searchAddress (term) {
-      Ajax().get('//maps.googleapis.com/maps/api/geocode/json?address=' + term + '&sensor=false').then(function (res, xhr) {
+      Ajax().get('//maps.googleapis.com/maps/api/geocode/json?address=' + encodeURIComponent(term) + '&sensor=false').then(function (res, xhr) {
         if (xhr.status === 200 && res.results.length > 0) {
           let geo = res.results[0].geometry
           let lat = geo.location.lat
