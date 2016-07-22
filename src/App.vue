@@ -68,7 +68,7 @@ export default {
         }
 
         for (var i = 0; i < this.checkedFilters.length; i++) {
-          if (loc[this.checkedFilters[i]] === 'Y' || loc[this.checkedFilters[i]] === true) {
+          if (loc[this.checkedFilters[i]] === 'Y' || loc[this.checkedFilters[i]] === true || loc[this.checkedFilters[i]] === '1' || loc[this.checkedFilters[i]] === 1) {
             return true
           }
         }

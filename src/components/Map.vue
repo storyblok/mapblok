@@ -48,16 +48,14 @@ export default {
       let marker = this.markers[location.index]
 
       this.activeLocation = location
-      this.map.setZoom(14)
+      this.map.setZoom(12)
       this.$nextTick(() => {
         this.openInfoBox(marker)
       })
     },
 
     searchAddress (term) {
-      Ajax().get('//maps.googleapis.com/maps/api/geocode/json?address=' + term + '&sensor=false').then(function (xhr) {
-        let res = xhr.body
-
+      Ajax().get('//maps.googleapis.com/maps/api/geocode/json?address=' + term + '&sensor=false').then(function (res, xhr) {
         if (xhr.status === 200 && res.results.length > 0) {
           let geo = res.results[0].geometry
           let lat = geo.location.lat
@@ -102,9 +100,9 @@ export default {
     },
 
     initCurrentLocation () {
-      Ajax().get('//freegeoip.net/json/').then(function (res) {
-        this.currentLocation = res
-        this.map.setCenter(new google.maps.LatLng(this.currentLocation.latitude, this.currentLocation.longitude))
+      Ajax().post('https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyD4ZfhoBtF5b3uGP0GvEmGX96finxbSxkc').then(function (res) {
+        this.currentLocation = res.location
+        this.map.setCenter(new google.maps.LatLng(this.currentLocation.lat, this.currentLocation.lng))
       }.bind(this))
     },
 
