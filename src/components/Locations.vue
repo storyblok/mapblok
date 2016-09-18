@@ -5,7 +5,7 @@
       <h1 v-if="loading">Loading...</h1>
       <div v-else>
         <h1>{{ 'locations'|t }} ({{ locations.length }})</h1>
-        <div v-for="location in locations">
+        <div v-for="location in locations | orderBy 'distance'">
           <location :location="location"></location>
         </div>
       </div>
@@ -22,6 +22,14 @@ export default {
     return {
       closed: false,
       loading: true
+    }
+  },
+
+  computed: {
+    locationsCount () {
+      return this.locations.filter(loc => {
+        return loc.visible
+      }).length
     }
   },
 

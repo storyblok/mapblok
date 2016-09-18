@@ -22,7 +22,9 @@ export default {
         'speciality_shop_for_textiles': c['if:speciality_shop_for_textiles'],
         'furniture_store': c['if:furniture_store'],
         'latitude': c['text:latitude'],
-        'longitude': c['text:longitude']
+        'longitude': c['text:longitude'],
+        'visible': true,
+        'distance': 0
       })
     }
 

@@ -58,6 +58,8 @@ export default {
       this.loading = false
       EventBus.$emit('app:settings-loaded')
     })
+
+    EventBus.$on('map:search-completed', this.runFilter)
   },
 
   methods: {

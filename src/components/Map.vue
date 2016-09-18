@@ -14,12 +14,14 @@ import Ajax from '@fdaciuk/ajax'
 import Config from '../Config'
 import InfoWindow from './InfoWindow.vue'
 import InfoBox from '../libs/InfoBox'
+import Debounce from '../libs/Debounce'
 import MarkerClusterer from 'node-js-marker-clusterer'
 
 export default {
   data () {
     return {
       center: { lat: 48.2, lng: 16.3667 },
+      centerLatLng: null,
       activeLocation: {}
     }
   },
@@ -30,12 +32,6 @@ export default {
     EventBus.$on('app:settings-loaded', this.initMap.bind(this))
     EventBus.$on('search-address', this.searchAddress)
     EventBus.$on('show-location', this.showLocation)
-  },
-
-  events: {
-    'search-address' () {
-      console.log('search')
-    }
   },
 
   components: {
@@ -60,8 +56,9 @@ export default {
           let geo = res.results[0].geometry
           let lat = geo.location.lat
           let lng = geo.location.lng
+          this.centerLatLng = new google.maps.LatLng(lat, lng)
 
-          this.map.setCenter(new google.maps.LatLng(lat, lng))
+          this.map.setCenter(this.centerLatLng)
 
           var resultBounds = new google.maps.LatLngBounds(
             new google.maps.LatLng(geo.viewport.southwest.lat, geo.viewport.southwest.lng),
@@ -69,8 +66,51 @@ export default {
           )
 
           this.map.fitBounds(resultBounds)
+          this.getMarkesInBound()
+          EventBus.$emit('map:search-completed')
         }
       }.bind(this))
+    },
+
+    calcDistance (from, to, unit) {
+      var lat1 = from.lat()
+      var lon1 = from.lng()
+      var lat2 = to.lat()
+      var lon2 = to.lng()
+      var radlat1 = Math.PI * lat1 / 180
+      var radlat2 = Math.PI * lat2 / 180
+      var theta = lon1 - lon2
+      var radtheta = Math.PI * theta / 180
+      var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta)
+      dist = Math.acos(dist)
+      dist = dist * 180 / Math.PI
+      dist = dist * 60 * 1.1515
+      if (unit === 'K') { dist = dist * 1.609344 }
+      if (unit === 'N') { dist = dist * 0.8684 }
+      return dist
+    },
+
+    calcDistances () {
+      for (var i = 0; i < this.markers.length; i++) {
+        let distance = this.calcDistance(this.markers[i].position, this.centerLatLng)
+        this.locations[this.markers[i].markerIndex].distance = distance
+      }
+    },
+
+    getMarkesInBound () {
+      Debounce('map:markers', () => {
+        for (var i = 0; i < this.markers.length; i++) {
+          let markerIndex = this.markers[i].markerIndex
+
+          if (this.map.getBounds().contains(this.markers[i].getPosition())) {
+            this.locations[markerIndex].visible = true
+          } else {
+            this.locations[markerIndex].visible = false
+          }
+        }
+        this.centerLatLng = this.map.getCenter()
+        this.calcDistances()
+      }, 500)
     },
 
     initMap () {
@@ -97,12 +137,16 @@ export default {
       this.initCurrentLocation()
       this.initInfoBox()
       this.initMarkers()
+
+      google.maps.event.addListener(this.map, 'bounds_changed', this.getMarkesInBound)
     },
 
     initCurrentLocation () {
       Ajax().post('https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyD4ZfhoBtF5b3uGP0GvEmGX96finxbSxkc').then(function (res) {
         this.currentLocation = res.location
-        this.map.setCenter(new google.maps.LatLng(this.currentLocation.lat, this.currentLocation.lng))
+        this.centerLatLng = new google.maps.LatLng(this.currentLocation.lat, this.currentLocation.lng)
+        this.map.setCenter(this.centerLatLng)
+        this.calcDistances()
       }.bind(this))
     },
 
@@ -135,7 +179,8 @@ export default {
 
         let marker = new google.maps.Marker({
           position: new google.maps.LatLng(parseFloat(currentMarkerData.latitude), parseFloat(currentMarkerData.longitude)),
-          icon: icon
+          icon: icon,
+          markerIndex: i
         })
 
         marker.addListener('click', () => {

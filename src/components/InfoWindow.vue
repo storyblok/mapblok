@@ -6,7 +6,7 @@
     {{ location.country }}
     <div class="infobox__contact">
       <div v-if="location.phone_number">{{ location.phone_number }}</div>
-      <div v-if="location.website"><a :href="location.website">{{ location.website }}</a></div>
+      <div v-if="location.website"><a class="infobox__weblink" :href="location.website">{{ location.website }}</a></div>
     </div>
   </div>
 </template>
@@ -42,5 +42,9 @@ export default {
 
 .infobox__company {
   font-weight: 300;
+}
+
+.infobox__weblink {
+  word-break: break-all;
 }
 </style>
