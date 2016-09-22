@@ -29,5 +29,13 @@ export default {
     }
 
     return result
+  },
+  template (id, component) {
+    let template = component
+
+    if (document.querySelectorAll(id).length > 0) {
+      return id
+    }
+    return template
   }
 }

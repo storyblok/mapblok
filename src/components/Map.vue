@@ -1,12 +1,3 @@
-<template>
-  <div>
-    <div class="map"></div>
-    <div style="display:none;">
-      <info-window :location="activeLocation" v-ref:info-window></info-window>
-    </div>
-  </div>
-</template>
-
 <script>
 import EventBus from '../libs/EventBus'
 import google from '../shims/Google'
@@ -16,8 +7,12 @@ import InfoWindow from './InfoWindow.vue'
 import InfoBox from '../libs/InfoBox'
 import Debounce from '../libs/Debounce'
 import MarkerClusterer from 'node-js-marker-clusterer'
+import Map from './Map.html'
+import Util from '../libs/Util'
 
 export default {
+  template: Util.template('#mapblok-map', Map),
+
   data () {
     return {
       center: { lat: 48.2, lng: 16.3667 },

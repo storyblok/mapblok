@@ -1,0 +1,10 @@
+<div class="mapblok">
+  <div class="mapblok__loading" v-if="loading">
+    <div><div></div></div>
+  </div>
+  <filters :checked-filters.sync="checkedFilters" :filters="filters" :locations.sync="locations"></filters>
+  <div class="mapblok__map">
+    <locations :locations="filteredLocations"></locations>
+    <maps :locations="filteredLocations"></maps>
+  </div>
+</div>

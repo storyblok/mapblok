@@ -1,14 +1,10 @@
 <script>
 import EventBus from '../libs/EventBus'
 import Filters from './Filters.html'
-
-let template = Filters
-if (document.querySelectorAll('#mapblok-filter').length > 0) {
-  template = '#mapblok-filter'
-}
+import Util from '../libs/Util'
 
 export default {
-  template: template,
+  template: Util.template('#mapblok-filters', Filters),
   data () {
     return {
       searchTerm: ''

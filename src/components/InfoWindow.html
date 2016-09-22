@@ -1,0 +1,10 @@
+<div class="infobox">
+  <strong>{{ location.name }}</strong><br>
+  {{ location.address }}<br>
+  {{ location.zip }}, {{ location.city }}<br>
+  {{ location.country }}
+  <div class="infobox__contact">
+    <div v-if="location.phone_number">{{ location.phone_number }}</div>
+    <div v-if="location.website"><a class="infobox__weblink" :href="location.website">{{ location.website }}</a></div>
+  </div>
+</div>

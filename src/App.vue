@@ -1,16 +1,3 @@
-<template>
-  <div class="mapblok">
-    <div class="mapblok__loading" v-if="loading">
-      <div><div></div></div>
-    </div>
-    <filters :checked-filters.sync="checkedFilters" :filters="filters" :locations.sync="locations"></filters>
-    <div class="mapblok__map">
-      <locations :locations="filteredLocations"></locations>
-      <maps :locations="filteredLocations"></maps>
-    </div>
-  </div>
-</template>
-
 <script>
 import Locations from './components/Locations.vue'
 import Filters from './components/Filters.vue'
@@ -18,8 +5,11 @@ import Maps from './components/Map.vue'
 import Ajax from '@fdaciuk/ajax'
 import Util from './libs/Util'
 import EventBus from './libs/EventBus'
+import App from './App.html'
 
 export default {
+  template: Util.template('#mapblok-app', App),
+
   data () {
     return {
       locations: [],

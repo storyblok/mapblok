@@ -1,23 +1,12 @@
-<template>
-  <div class="locations" :class="{'locations--closed': closed}">
-    <button v-on:click="closed = !closed" class="locations__close"></button>
-    <div class="locations__panel">
-      <h1 v-if="loading">Loading...</h1>
-      <div v-else>
-        <h1>{{ 'locations'|t }} ({{ locations.length }})</h1>
-        <div v-for="location in locations | orderBy 'distance'">
-          <location :location="location"></location>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
-
 <script>
 import Location from './Location.vue'
 import EventBus from '../libs/EventBus'
+import Locations from './Locations.html'
+import Util from '../libs/Util'
 
 export default {
+  template: Util.template('#mapblok-locations', Locations),
+
   data () {
     return {
       closed: false,
