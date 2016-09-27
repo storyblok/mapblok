@@ -275,9 +275,10 @@ InfoBox.prototype.getCloseClickHandler_ = function () {
         e.cancelBubble = true;
 
         if (e.stopPropagation) {
-
             e.stopPropagation();
         }
+
+        e.preventDefault();
 
         /**
          * This event is fired when the InfoBox's close box is clicked.

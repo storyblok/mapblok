@@ -47,7 +47,7 @@ export default {
     right: 0;
     top: 0;
     text-decoration: none;
-    padding: 10px;
+    padding: 5px;
     display: inline-block;
     font-size: 20px;
 

@@ -1,12 +1,12 @@
 <div class="location">
   <div @click="showLocation" class="location__name">{{ location.name }}</div>
-  <div v-if="location.address">{{ location.address }}</div>
-  <span v-if="location.zip">{{ location.zip }}, </span><span v-if="location.city">{{ location.city }}<br></span>
-  <div v-if="location.country">{{ location.country }}</div>
+  <div v-show="location.address">{{ location.address }}</div>
+  <span v-show="location.zip">{{ location.zip }}, </span><span v-show="location.city">{{ location.city }}<br></span>
+  <div v-show="location.country">{{ location.country }}</div>
 
   <div class="location__contact">
-    <div v-if="location.phone_number">{{ location.phone_number }}</div>
-    <div v-if="location.website"><a :href="location.website">{{ location.website }}</a></div>
+    <div v-show="location.phone_number">{{ location.phone_number }}</div>
+    <div v-show="location.website"><a :href="location.website">{{ location.website }}</a></div>
   </div>
 
   <div class="location__features">

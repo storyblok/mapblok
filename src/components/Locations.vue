@@ -10,7 +10,9 @@ export default {
   data () {
     return {
       closed: false,
-      loading: true
+      loading: true,
+      perPage: 10,
+      page: 1
     }
   },
 
@@ -19,6 +21,25 @@ export default {
       return this.locations.filter(loc => {
         return loc.visible
       }).length
+    },
+    paginatedLocations () {
+      let locations = JSON.parse(JSON.stringify(this.locations))
+
+      return locations.sort((a, b) => {
+        return a.distance - b.distance
+      }).slice(0, this.perPage * this.page)
+    }
+  },
+
+  watch: {
+    locations () {
+      this.page = 1
+
+      let loc = this.$el.querySelectorAll('.locations__panel')
+
+      if (loc.length) {
+        loc[0].scrollTop = 0
+      }
     }
   },
 
@@ -32,6 +53,16 @@ export default {
 
   components: {
     Location
+  },
+
+  methods: {
+    scrolling (e) {
+      let obj = e.currentTarget
+
+      if (obj.scrollHeight - obj.offsetHeight - obj.scrollTop < 1) {
+        this.page = this.page + 1
+      }
+    }
   }
 }
 </script>

@@ -1,10 +1,10 @@
 <div class="locations" :class="{'locations--closed': closed}">
   <button v-on:click="closed = !closed" class="locations__close"></button>
-  <div class="locations__panel">
+  <div class="locations__panel" v-on:scroll="scrolling($event)">
     <h1 v-if="loading">Loading...</h1>
     <div v-else>
       <h1>{{ 'locations'|t }} ({{ locations.length }})</h1>
-      <div v-for="location in locations">
+      <div v-for="location in paginatedLocations">
         <location :location="location" :index="$index"></location>
       </div>
     </div>

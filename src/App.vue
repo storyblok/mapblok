@@ -95,6 +95,7 @@ export default {
       })
 
       EventBus.$emit('app:markers-loaded')
+      EventBus.$emit('app:filtering-completed')
     }
   }
 }
