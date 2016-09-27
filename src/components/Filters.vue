@@ -23,15 +23,6 @@ export default {
 
 <style lang="scss">
 .mapblok {
-  .icon {
-    display: inline-block;
-    width: 1em;
-    height: 1em;
-    stroke-width: 0;
-    stroke: currentColor;
-    fill: currentColor;
-  }
-
   .icon-search {
     width: 0.9501953125em;
   }

@@ -6,7 +6,7 @@ import Util from '../libs/Util'
 export default {
   template: Util.template('#mapblok-location', Location),
 
-  props: ['location'],
+  props: ['location', 'index'],
 
   methods: {
     showLocation () {

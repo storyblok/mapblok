@@ -172,9 +172,9 @@ InfoBox.prototype.createInfoBoxDiv_ = function () {
         this.setBoxStyle_();
 
         if (typeof this.content_.nodeType === "undefined") {
-            this.div_.innerHTML = this.getCloseBoxImg_() + this.content_;
+            this.div_.innerHTML = this.content_;
         } else {
-            this.div_.innerHTML = this.getCloseBoxImg_();
+            this.div_.innerHTML = '';
             this.div_.appendChild(this.content_);
         }
 
@@ -240,29 +240,6 @@ InfoBox.prototype.createInfoBoxDiv_ = function () {
 };
 
 /**
- * Returns the HTML <IMG> tag for the close box.
- * @private
- */
-InfoBox.prototype.getCloseBoxImg_ = function () {
-
-    var img = "";
-
-    if (this.closeBoxURL_ !== "") {
-
-        img  = "<img";
-        img += " src='" + this.closeBoxURL_ + "'";
-        img += " align=right"; // Do this because Opera chokes on style='float: right;'
-        img += " style='";
-        img += " position: relative;"; // Required by MSIE
-        img += " cursor: pointer;";
-        img += " margin: " + this.closeBoxMargin_ + ";";
-        img += "'>";
-    }
-
-    return img;
-};
-
-/**
  * Adds the click handler to the InfoBox close box.
  * @private
  */
@@ -272,8 +249,11 @@ InfoBox.prototype.addClickHandler_ = function () {
 
     if (this.closeBoxURL_ !== "") {
 
-        closeBox = this.div_.firstChild;
-        this.closeListener_ = google.maps.event.addDomListener(closeBox, "click", this.getCloseClickHandler_());
+        closeBox = this.div_.querySelectorAll('.infobox__close');
+
+        if (closeBox.length) {
+            this.closeListener_ = google.maps.event.addDomListener(closeBox[0], "click", this.getCloseClickHandler_());
+        }
 
     } else {
 
@@ -604,9 +584,9 @@ InfoBox.prototype.setContent = function (content) {
         }
 
         if (typeof content.nodeType === "undefined") {
-            this.div_.innerHTML = this.getCloseBoxImg_() + content;
+            this.div_.innerHTML = content;
         } else {
-            this.div_.innerHTML = this.getCloseBoxImg_();
+            this.div_.innerHTML = '';
             this.div_.appendChild(content);
         }
 
@@ -616,9 +596,9 @@ InfoBox.prototype.setContent = function (content) {
         if (!this.fixedWidthSet_) {
             this.div_.style.width = this.div_.offsetWidth + "px";
             if (typeof content.nodeType === "undefined") {
-                this.div_.innerHTML = this.getCloseBoxImg_() + content;
+                this.div_.innerHTML = content;
             } else {
-                this.div_.innerHTML = this.getCloseBoxImg_();
+                this.div_.innerHTML = '';
                 this.div_.appendChild(content);
             }
         }

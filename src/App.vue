@@ -6,6 +6,7 @@ import Ajax from '@fdaciuk/ajax'
 import Util from './libs/Util'
 import EventBus from './libs/EventBus'
 import App from './App.html'
+// import Pjax from './Libs/Pjax'
 
 export default {
   template: Util.template('#mapblok-app', App),
@@ -50,9 +51,34 @@ export default {
     })
 
     EventBus.$on('map:search-completed', this.runFilter)
+    EventBus.$on('map:bounds-changed', this.refreshData)
   },
 
   methods: {
+    refreshData (bounds) {
+      /* J50Npi.getJSON('http://www.silhouette.com/backend/Retailer/GetRetailers.mvc', {
+        isInitial: false, swLat: bounds.getSouthWest().lat(), swLng: bounds.getSouthWest().lng(), neLat: bounds.getNorthEast().lat(), neLng: bounds.getNorthEast().lng(), cpLat: bounds.getCenter().lat(), cpLng: bounds.getCenter().lng()
+      }, (res) => {
+        let result = []
+
+        res.Retailers.forEach((item) => {
+          result.push({
+            'id': item.Company,
+            'name': item.Company,
+            'latitude': item.Coordinates.Latitude,
+            'longitude': item.Coordinates.Longitude,
+            'visible': true,
+            'distance': 0
+          })
+        })
+
+        this.locations = result
+        this.filteredLocations = result
+        //this.runFilter()
+        EventBus.$emit('app:markers-loaded')
+      }) */
+    },
+
     runFilter () {
       this.filteredLocations = this.locations.filter(loc => {
         if (this.checkedFilters.length === 0) {
@@ -67,6 +93,8 @@ export default {
 
         return false
       })
+
+      EventBus.$emit('app:markers-loaded')
     }
   }
 }

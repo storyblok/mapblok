@@ -6,7 +6,7 @@
 
   <div class="location__contact">
     <div v-if="location.phone_number">{{ location.phone_number }}</div>
-    <div v-if="location.website">{{ location.website }}</div>
+    <div v-if="location.website"><a :href="location.website">{{ location.website }}</a></div>
   </div>
 
   <div class="location__features">

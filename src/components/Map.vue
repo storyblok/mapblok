@@ -17,7 +17,9 @@ export default {
     return {
       center: { lat: 48.2, lng: 16.3667 },
       centerLatLng: null,
-      activeLocation: {}
+      markerCoordinates: [],
+      activeLocation: {},
+      markers: []
     }
   },
 
@@ -105,6 +107,8 @@ export default {
         }
         this.centerLatLng = this.map.getCenter()
         this.calcDistances()
+
+        EventBus.$dispatch('map:bounds-changed', this.map.getBounds())
       }, 500)
     },
 
@@ -154,21 +158,17 @@ export default {
         anchor: new google.maps.Point(17.5, 30)
       }
 
-      this.markers = this.markers || []
+      this.markers = []
 
       if (typeof this.markerClusterer !== 'undefined') {
         this.markerClusterer.clearMarkers()
       }
 
-      for (var i = 0; i < this.markers.length; i++) {
-        this.markers[i].setMap(null)
-      }
-
-      this.markers = []
-
       for (let i = 0, max = this.locations.length; i < max; i++) {
         let currentMarkerData = this.locations[i]
+        // let markerHash = currentMarkerData.latitude + '#' + currentMarkerData.longitude
 
+        // if (this.markerCoordinates.indexOf(markerHash) === -1) {
         // Set index for easy access of markers later
         currentMarkerData.index = i
 
@@ -186,6 +186,8 @@ export default {
         })
 
         this.markers.push(marker)
+        // this.markerCoordinates.push(markerHash)
+        // }
       }
 
       this.markerClusterer = new MarkerClusterer(this.map, this.markers, {
@@ -213,8 +215,6 @@ export default {
           textSize: 12
         }]
       })
-
-      google.maps.event.trigger(this.map, 'resize')
     },
 
     openInfoBox (marker) {
@@ -240,6 +240,15 @@ export default {
   .map {
     height: 600px;
     line-height: 1;
+  }
+
+  .icon {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    stroke-width: 0;
+    stroke: currentColor;
+    fill: currentColor;
   }
 }
 </style>
