@@ -39,6 +39,7 @@ export default {
 
   .infobox__weblink {
     word-break: break-all;
+    display: block;
   }
 
   .infobox__close {

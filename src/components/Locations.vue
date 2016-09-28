@@ -59,7 +59,7 @@ export default {
     scrolling (e) {
       let obj = e.currentTarget
 
-      if (obj.scrollHeight - obj.offsetHeight - obj.scrollTop < 1) {
+      if (obj.scrollHeight - obj.offsetHeight - obj.scrollTop < 200) {
         this.page = this.page + 1
       }
     }
