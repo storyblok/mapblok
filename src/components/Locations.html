@@ -4,7 +4,7 @@
     <h1 v-if="loading">Loading...</h1>
     <div v-else>
       <h1>{{ 'locations'|t }} ({{ locations.length }})</h1>
-      <div v-for="location in paginatedLocations">
+      <div v-for="location in paginatedLocations" track-by="id">
         <location :location="location" :index="$index"></location>
       </div>
     </div>

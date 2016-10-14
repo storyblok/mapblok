@@ -10,6 +10,32 @@ import MarkerClusterer from 'node-js-marker-clusterer'
 import Map from './Map.html'
 import Util from '../libs/Util'
 
+let defaultCluserStyle = {
+  maxZoom: 13,
+  styles: [{
+    url: Config.asset('static/images/m1.png'),
+    height: 52,
+    width: 53,
+    anchor: [22, 0],
+    textColor: '#FFFFFF',
+    textSize: 10
+  }, {
+    url: Config.asset('static/images/m2.png'),
+    height: 55,
+    width: 56,
+    anchor: [23, 0],
+    textColor: '#FFFFFF',
+    textSize: 11
+  }, {
+    url: Config.asset('static/images/m3.png'),
+    height: 65,
+    width: 66,
+    anchor: [28, 0],
+    textColor: '#FFFFFF',
+    textSize: 12
+  }]
+}
+
 export default {
   template: Util.template('#mapblok-map', Map),
 
@@ -38,7 +64,7 @@ export default {
   methods: {
 
     showLocation (location) {
-      let marker = this.markers[location.index]
+      let marker = this.markers[location.locIndex]
 
       this.activeLocation = location
       this.map.setZoom(12)
@@ -64,7 +90,7 @@ export default {
 
           this.map.fitBounds(resultBounds)
           this.getMarkesInBound()
-          EventBus.$emit('map:search-completed')
+          EventBus.emit('map:search-completed')
         }
       }.bind(this))
     },
@@ -88,6 +114,10 @@ export default {
     },
 
     calcDistances () {
+      if (EventBus.componentSettings.partialLoad) {
+        return
+      }
+
       for (var i = 0; i < this.markers.length; i++) {
         let distance = this.calcDistance(this.markers[i].position, this.centerLatLng)
         this.locations[this.markers[i].markerIndex].distance = distance
@@ -108,8 +138,8 @@ export default {
         this.centerLatLng = this.map.getCenter()
         this.calcDistances()
 
-        EventBus.$dispatch('map:bounds-changed', this.map.getBounds())
-      }, 500)
+        EventBus.emit('map:bounds-changed', this.map.getBounds())
+      }, 1000)
     },
 
     initMap () {
@@ -124,7 +154,8 @@ export default {
         center: this.center,
         scrollwheel: false,
         styles: this.$root.config.style,
-        zoom: 9,
+        zoom: EventBus.$get('settings.map.zoom') || 9,
+        minZoom: EventBus.$get('settings.map.minZoom') || 1,
         mapTypeControl: true,
         mapTypeControlOptions: {
           style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
@@ -150,12 +181,24 @@ export default {
     },
 
     initMarkers () {
-      let icon = {
+      let iconSetting = {
         url: Config.asset('static/images/icon.png'),
-        size: new google.maps.Size(35, 30),
-        scaledSize: new google.maps.Size(35, 30),
-        origin: new google.maps.Point(0, 0),
-        anchor: new google.maps.Point(17.5, 30)
+        size: [35, 30],
+        scaledSize: [35, 30],
+        origin: [0, 0],
+        anchor: [17.5, 30]
+      }
+
+      if (EventBus.settings.map && EventBus.settings.map.icon) {
+        iconSetting = EventBus.settings.map.icon
+      }
+
+      let icon = {
+        url: iconSetting.url,
+        size: new google.maps.Size(iconSetting.size[0], iconSetting.size[1]),
+        scaledSize: new google.maps.Size(iconSetting.scaledSize[0], iconSetting.scaledSize[1]),
+        origin: new google.maps.Point(iconSetting.origin[0], iconSetting.origin[1]),
+        anchor: new google.maps.Point(iconSetting.anchor[0], iconSetting.anchor[1])
       }
 
       this.markers = []
@@ -190,31 +233,11 @@ export default {
         // }
       }
 
-      this.markerClusterer = new MarkerClusterer(this.map, this.markers, {
-        maxZoom: 13,
-        styles: [{
-          url: Config.asset('static/images/m1.png'),
-          height: 52,
-          width: 53,
-          anchor: [22, 0],
-          textColor: '#FFFFFF',
-          textSize: 10
-        }, {
-          url: Config.asset('static/images/m2.png'),
-          height: 55,
-          width: 56,
-          anchor: [23, 0],
-          textColor: '#FFFFFF',
-          textSize: 11
-        }, {
-          url: Config.asset('static/images/m3.png'),
-          height: 65,
-          width: 66,
-          anchor: [28, 0],
-          textColor: '#FFFFFF',
-          textSize: 12
-        }]
-      })
+      if (EventBus.settings.map && EventBus.settings.map.cluster) {
+        defaultCluserStyle = EventBus.settings.map.cluster
+      }
+
+      this.markerClusterer = new MarkerClusterer(this.map, this.markers, defaultCluserStyle)
     },
 
     openInfoBox (marker) {
@@ -240,6 +263,10 @@ export default {
   .map {
     height: 600px;
     line-height: 1;
+
+    * {
+      box-sizing: content-box;
+    }
   }
 
   .icon {

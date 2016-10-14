@@ -10,7 +10,7 @@ export default {
 
   methods: {
     showLocation () {
-      EventBus.$emit('show-location', this.location)
+      EventBus.emit('show-location', this.location)
     }
   }
 }

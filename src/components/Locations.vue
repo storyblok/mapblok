@@ -25,9 +25,13 @@ export default {
     paginatedLocations () {
       let locations = JSON.parse(JSON.stringify(this.locations))
 
-      return locations.sort((a, b) => {
-        return a.distance - b.distance
-      }).slice(0, this.perPage * this.page)
+      if (!EventBus.componentSettings.partialLoad) {
+        locations = locations.sort((a, b) => {
+          return a.distance - b.distance
+        })
+      }
+
+      return locations.slice(0, this.perPage * this.page)
     }
   },
 

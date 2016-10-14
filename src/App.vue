@@ -36,47 +36,47 @@ export default {
   },
 
   ready () {
-    Ajax().get(this.settings.markers).then((res) => {
-      this.locations = Util.map(res)
-      this.runFilter()
-      EventBus.$emit('app:markers-loaded')
-    })
+    if (!this.settings.partialLoad) {
+      Ajax().get(this.settings.markers).then((res) => {
+        this.locations = Util.map(res)
+        this.runFilter()
+        EventBus.emit('app:markers-loaded')
+      })
+    }
 
     Ajax().get(this.settings.settings).then((res) => {
       this.$root.config = res
       this.$root.translations = res.translations[this.settings.language]
       this.filters = res.filters
       this.loading = false
-      EventBus.$emit('app:settings-loaded')
+      EventBus.emit('app:settings-loaded', res)
     })
 
+    EventBus.emit('app:html-settings-set', this.settings)
     EventBus.$on('map:search-completed', this.runFilter)
     EventBus.$on('map:bounds-changed', this.refreshData)
   },
 
   methods: {
     refreshData (bounds) {
-      /* J50Npi.getJSON('http://www.silhouette.com/backend/Retailer/GetRetailers.mvc', {
-        isInitial: false, swLat: bounds.getSouthWest().lat(), swLng: bounds.getSouthWest().lng(), neLat: bounds.getNorthEast().lat(), neLng: bounds.getNorthEast().lng(), cpLat: bounds.getCenter().lat(), cpLng: bounds.getCenter().lng()
-      }, (res) => {
-        let result = []
+      if (this.settings.partialLoad) {
+        Ajax().get(this.settings.markers + '?latitude=' + bounds.getCenter().lat() + '&longitude=' + bounds.getCenter().lng()).then((res) => {
+          if (typeof res === 'string') {
+            return
+          }
 
-        res.Retailers.forEach((item) => {
-          result.push({
-            'id': item.Company,
-            'name': item.Company,
-            'latitude': item.Coordinates.Latitude,
-            'longitude': item.Coordinates.Longitude,
-            'visible': true,
-            'distance': 0
-          })
+          if (this.settings.useMap) {
+            this.locations = Util.map(res)
+          } else {
+            res.forEach((item, index) => {
+              item.locIndex = index
+            })
+            this.locations = res
+          }
+
+          this.runFilter()
         })
-
-        this.locations = result
-        this.filteredLocations = result
-        //this.runFilter()
-        EventBus.$emit('app:markers-loaded')
-      }) */
+      }
     },
 
     runFilter () {
@@ -94,8 +94,8 @@ export default {
         return false
       })
 
-      EventBus.$emit('app:markers-loaded')
-      EventBus.$emit('app:filtering-completed')
+      EventBus.emit('app:markers-loaded')
+      EventBus.emit('app:filtering-completed')
     }
   }
 }

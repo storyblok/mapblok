@@ -15,7 +15,7 @@ export default {
 
   methods: {
     doSearch () {
-      EventBus.$emit('search-address', this.searchTerm)
+      EventBus.emit('search-address', this.searchTerm)
     }
   }
 }

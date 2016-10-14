@@ -6,11 +6,20 @@
   </head>
   <body>
     <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyB1CIlultBqwGs2O9cfO5fw1TXMZi0r8dQ" type="text/javascript"></script>
-    <mapblok :settings="{
+    <!-- <mapblok :settings="{
       language: 'en',
       markers: '/static/markers.json',
       filters: '/static/filters.json',
       settings: '/static/settings.json'
+    }">
+    </mapblok> -->
+
+    <mapblok :settings="{
+      language: 'en',
+      markers: 'http://localhost:8800/locations.php',
+      filters: '/static/filters.json',
+      settings: '/static/settings.json',
+      partialLoad: true
     }">
     </mapblok>
     <!-- built files will be auto injected -->

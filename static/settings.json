@@ -40,5 +40,41 @@
     {
       "value": "furniture_store"
     }
-  ]
+  ],
+  "map": {
+    "zoom": 9,
+    "minZoom": 8,
+    "icon": {
+      "url": "//mapblok.s3.amazonaws.com/static/images/icon.png",
+      "size": [35, 30],
+      "scaledSize": [35, 30],
+      "origin": [0, 0],
+      "anchor": [17.5, 30]
+    },
+    "cluster": {
+      "maxZoom": 13,
+      "styles": [{
+        "url": "//mapblok.s3.amazonaws.com/static/images/m1.png",
+        "height": 52,
+        "width": 53,
+        "anchor": [22, 0],
+        "textColor": "#FFFFFF",
+        "textSize": 10
+      }, {
+        "url": "//mapblok.s3.amazonaws.com/static/images/m2.png",
+        "height": 55,
+        "width": 56,
+        "anchor": [23, 0],
+        "textColor": "#FFFFFF",
+        "textSize": 11
+      }, {
+        "url": "//mapblok.s3.amazonaws.com/static/images/m3.png",
+        "height": 65,
+        "width": 66,
+        "anchor": [28, 0],
+        "textColor": "#FFFFFF",
+        "textSize": 12
+      }]
+    }
+  }
 }
