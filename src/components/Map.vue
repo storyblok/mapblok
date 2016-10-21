@@ -6,7 +6,7 @@ import Config from '../Config'
 import InfoWindow from './InfoWindow.vue'
 import InfoBox from '../libs/InfoBox'
 import Debounce from '../libs/Debounce'
-import MarkerClusterer from 'node-js-marker-clusterer'
+import MarkerClusterer from '../libs/MarkerClusterer'
 import Map from './Map.html'
 import Util from '../libs/Util'
 
@@ -34,6 +34,11 @@ let defaultCluserStyle = {
     textColor: '#FFFFFF',
     textSize: 12
   }]
+}
+
+let defaultInfoBoxStyle = {
+  pixelOffset: [-120, 0],
+  infoBoxClearance: [1, 1]
 }
 
 export default {
@@ -247,11 +252,15 @@ export default {
     },
 
     initInfoBox () {
+      if (EventBus.settings.map && EventBus.settings.map.infobox) {
+        defaultInfoBoxStyle = EventBus.settings.map.infobox
+      }
+
       this.infoBox = new InfoBox({
         disableAutoPan: false,
         maxWidth: 'auto',
-        pixelOffset: new google.maps.Size(-120, 0),
-        infoBoxClearance: new google.maps.Size(1, 1)
+        pixelOffset: new google.maps.Size(defaultInfoBoxStyle.pixelOffset[0], defaultInfoBoxStyle.pixelOffset[1]),
+        infoBoxClearance: new google.maps.Size(defaultInfoBoxStyle.infoBoxClearance[0], defaultInfoBoxStyle.infoBoxClearance[2])
       })
     }
   }

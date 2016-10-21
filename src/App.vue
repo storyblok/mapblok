@@ -6,7 +6,6 @@ import Ajax from '@fdaciuk/ajax'
 import Util from './libs/Util'
 import EventBus from './libs/EventBus'
 import App from './App.html'
-// import Pjax from './Libs/Pjax'
 
 export default {
   template: Util.template('#mapblok-app', App),
@@ -60,7 +59,7 @@ export default {
   methods: {
     refreshData (bounds) {
       if (this.settings.partialLoad) {
-        Ajax().get(this.settings.markers + '?latitude=' + bounds.getCenter().lat() + '&longitude=' + bounds.getCenter().lng()).then((res) => {
+        Ajax().get(this.settings.markers + '?latitude=' + bounds.getCenter().lat() + '&longitude=' + bounds.getCenter().lng() + '&limit=' + (this.settings.limit || 0)).then((res) => {
           if (typeof res === 'string') {
             return
           }

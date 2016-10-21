@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "dev": "node build/dev-server.js",
-    "build": "node build/build.js",
+    "build": "node build/build.js && aws s3 cp dist/static/js/app.js s3://mapblok/v2/static/js/app.js --acl public-read",
     "test": "",
     "lint": "eslint --ext .js,.vue src test/unit/specs test/e2e/specs"
   },

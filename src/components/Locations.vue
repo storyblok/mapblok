@@ -11,12 +11,14 @@ export default {
     return {
       closed: false,
       loading: true,
-      perPage: 10,
       page: 1
     }
   },
 
   computed: {
+    perPage () {
+      return EventBus.componentSettings.perPage || 10
+    },
     locationsCount () {
       return this.locations.filter(loc => {
         return loc.visible
@@ -60,6 +62,10 @@ export default {
   },
 
   methods: {
+    nextPage () {
+      this.page = this.page + 1
+    },
+
     scrolling (e) {
       let obj = e.currentTarget
 
