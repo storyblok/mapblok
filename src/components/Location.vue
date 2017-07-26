@@ -11,6 +11,10 @@ export default {
   methods: {
     showLocation () {
       EventBus.emit('show-location', this.location)
+    },
+
+    highlightLocation () {
+      EventBus.emit('hightlight-location', this.location)
     }
   }
 }

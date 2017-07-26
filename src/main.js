@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Mapblok from './App.vue'
+import EventBus from './libs/EventBus'
 
 Vue.filter('t', function (str) {
   return this.$root.translations[str]
@@ -13,7 +14,7 @@ Vue.filter('displayIfTrue', function (check, str) {
 })
 
 /* eslint-disable no-new */
-new Vue({
+let Root = new Vue({
   data () {
     return {
       translations: {},
@@ -23,3 +24,8 @@ new Vue({
   el: 'body',
   components: { Mapblok }
 })
+
+window.Mapblok = {
+  EventBus,
+  Root
+}

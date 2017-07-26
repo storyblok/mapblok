@@ -44,6 +44,7 @@
   "map": {
     "zoom": 9,
     "minZoom": 8,
+    "showZoom": 14,
     "icon": {
       "url": "//mapblok.s3.amazonaws.com/static/images/icon.png",
       "size": [35, 30],
@@ -52,7 +53,7 @@
       "anchor": [17.5, 30]
     },
     "cluster": {
-      "maxZoom": 13,
+      "maxZoom": 11,
       "styles": [{
         "url": "//mapblok.s3.amazonaws.com/static/images/m1.png",
         "height": 52,

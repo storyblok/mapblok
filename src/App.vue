@@ -37,7 +37,7 @@ export default {
   ready () {
     if (!this.settings.partialLoad) {
       Ajax().get(this.settings.markers).then((res) => {
-        this.locations = Util.map(res)
+        this.locations = this.addLocId(Util.map(res))
         this.runFilter()
         EventBus.emit('app:markers-loaded')
       })
@@ -57,6 +57,14 @@ export default {
   },
 
   methods: {
+    addLocId (locations) {
+      locations.forEach((item, index) => {
+        item.locIndex = index
+      })
+
+      return locations
+    },
+
     refreshData (bounds) {
       if (this.settings.partialLoad) {
         Ajax().get(this.settings.markers + '?latitude=' + bounds.getCenter().lat() + '&longitude=' + bounds.getCenter().lng() + '&limit=' + (this.settings.limit || 0)).then((res) => {
@@ -65,12 +73,9 @@ export default {
           }
 
           if (this.settings.useMap) {
-            this.locations = Util.map(res)
+            this.locations = this.addLocId(Util.map(res))
           } else {
-            res.forEach((item, index) => {
-              item.locIndex = index
-            })
-            this.locations = res
+            this.locations = this.addLocId(res)
           }
 
           this.runFilter()

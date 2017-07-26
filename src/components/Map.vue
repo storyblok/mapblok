@@ -11,7 +11,7 @@ import Map from './Map.html'
 import Util from '../libs/Util'
 
 let defaultCluserStyle = {
-  maxZoom: 13,
+  maxZoom: 11,
   styles: [{
     url: Config.asset('static/images/m1.png'),
     height: 52,
@@ -60,6 +60,7 @@ export default {
     EventBus.$on('app:settings-loaded', this.initMap.bind(this))
     EventBus.$on('search-address', this.searchAddress)
     EventBus.$on('show-location', this.showLocation)
+    EventBus.$on('hightlight-location', this.animateMarker)
   },
 
   components: {
@@ -70,12 +71,27 @@ export default {
 
     showLocation (location) {
       let marker = this.markers[location.locIndex]
+      let zoom = EventBus.$get('settings.map.showZoom') || 12
 
       this.activeLocation = location
-      this.map.setZoom(12)
+
+      if (this.map.getZoom() < zoom) {
+        this.map.setZoom(zoom)
+      }
+
       this.$nextTick(() => {
         this.openInfoBox(marker)
       })
+    },
+
+    animateMarker (location) {
+      let marker = this.markers[location.locIndex]
+
+      marker.setAnimation(google.maps.Animation.BOUNCE)
+
+      setTimeout(() => {
+        marker.setAnimation(null)
+      }, 1400)
     },
 
     searchAddress (term) {
@@ -247,8 +263,15 @@ export default {
 
     openInfoBox (marker) {
       let html = this.$refs.infoWindow.$el.outerHTML
+
+      this.map.setCenter(marker.position)
       this.infoBox.setContent(html)
       this.infoBox.open(this.map, marker)
+
+      EventBus.emit('info-window-opened', {
+        marker: marker,
+        location: this.activeLocation
+      })
     },
 
     initInfoBox () {
