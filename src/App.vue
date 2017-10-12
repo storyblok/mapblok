@@ -16,7 +16,8 @@ export default {
       filteredLocations: [],
       filters: [],
       checkedFilters: [],
-      loading: true
+      loading: true,
+      country: null
     }
   },
 
@@ -67,7 +68,9 @@ export default {
 
     refreshData (bounds) {
       if (this.settings.partialLoad) {
-        Ajax().get(this.settings.markers + '?latitude=' + bounds.getCenter().lat() + '&longitude=' + bounds.getCenter().lng() + '&limit=' + (this.settings.limit || 0)).then((res) => {
+        let country = this.country ? '&country=' + this.country : ''
+
+        Ajax().get(this.settings.markers + '?latitude=' + bounds.getCenter().lat() + '&longitude=' + bounds.getCenter().lng() + '&limit=' + (this.settings.limit || 0) + country).then((res) => {
           if (typeof res === 'string') {
             return
           }
