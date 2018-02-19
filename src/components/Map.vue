@@ -50,7 +50,8 @@ export default {
       centerLatLng: null,
       markerCoordinates: [],
       activeLocation: {},
-      markers: []
+      markers: [],
+      tries: 0
     }
   },
 
@@ -94,25 +95,42 @@ export default {
       }, 1400)
     },
 
-    searchAddress (term) {
-      Ajax().get('//maps.googleapis.com/maps/api/geocode/json?address=' + encodeURIComponent(term) + '&sensor=false').then(function (res, xhr) {
-        if (xhr.status === 200 && res.results.length > 0) {
-          let geo = res.results[0].geometry
-          let lat = geo.location.lat
-          let lng = geo.location.lng
-          this.centerLatLng = new google.maps.LatLng(lat, lng)
+    searchAddress (query) {
+      Ajax().get('//maps.googleapis.com/maps/api/geocode/json?address=' + encodeURIComponent(query) + '&sensor=false').then(function (res, xhr) {
+        if (xhr.status === 200) {
+          if (res.status === 'OVER_QUERY_LIMIT') {
+            console.log(res.status)
+            this.tries = this.tries + 1
 
-          this.map.setCenter(this.centerLatLng)
+            if (this.tries < 6) {
+              setTimeout(() => {
+                this.searchAddress(query)
+              }, 1000)
+            } else {
+              this.tries = 0
+            }
+            return
+          }
 
-          var resultBounds = new google.maps.LatLngBounds(
-            new google.maps.LatLng(geo.viewport.southwest.lat, geo.viewport.southwest.lng),
-            new google.maps.LatLng(geo.viewport.northeast.lat, geo.viewport.northeast.lng)
-          )
+          if (res.results.length > 0) {
+            this.tries = 0
+            let geo = res.results[0].geometry
+            let lat = geo.location.lat
+            let lng = geo.location.lng
+            this.centerLatLng = new google.maps.LatLng(lat, lng)
 
-          this.map.fitBounds(resultBounds)
-          this.getMarkesInBound()
-          EventBus.emit('map:search-completed')
+            this.map.setCenter(this.centerLatLng)
+
+            var resultBounds = new google.maps.LatLngBounds(
+              new google.maps.LatLng(geo.viewport.southwest.lat, geo.viewport.southwest.lng),
+              new google.maps.LatLng(geo.viewport.northeast.lat, geo.viewport.northeast.lng)
+            )
+
+            this.map.fitBounds(resultBounds)
+            this.getMarkesInBound()
+          }
         }
+        EventBus.emit('map:search-completed')
       }.bind(this))
     },
 
@@ -193,7 +211,9 @@ export default {
     },
 
     initCurrentLocation () {
-      Ajax().post('https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyD4ZfhoBtF5b3uGP0GvEmGX96finxbSxkc').then(function (res) {
+      let appKey = EventBus.$get('settings.map.key') || 'AIzaSyD4ZfhoBtF5b3uGP0GvEmGX96finxbSxkc'
+
+      Ajax().post('https://www.googleapis.com/geolocation/v1/geolocate?key=' + appKey).then(function (res) {
         this.currentLocation = res.location
         this.centerLatLng = new google.maps.LatLng(this.currentLocation.lat, this.currentLocation.lng)
         this.map.setCenter(this.centerLatLng)
